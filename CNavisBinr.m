@@ -418,6 +418,10 @@ classdef CNavisBinr < handle
             NB.sendPacket('39', dec2hex(Period, 2));
          end         
         
+         function request_60h_bymeansof_21h(NB, Period)
+            NB.sendPacket('21', dec2hex(Period, 2));
+         end
+         
          function sendPacket(NB, PacketNumber, Data)
              if NB.Mode == NB.Mode_Device
                 fwrite(NB.IOid, hex2dec('10'), 'uint8');
@@ -431,6 +435,21 @@ classdef CNavisBinr < handle
                  fprintf('This function is available in Mode_Device only\n');
              end
          end
+         
+         function reset_woerase(NB)
+             NB.sendPacket('01', '000121010001');
+             pause(2);
+             NB.sendPacket('01', '000121010001');
+         end
+         
+         function reset_erase(NB)
+             NB.sendPacket('01', '000121010001');
+             pause(2);
+             NB.sendPacket('01', '000121010000');
+             pause(2);
+             NB.sendPacket('01', '000121010000');
+         end
+
         
     end
     

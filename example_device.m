@@ -6,12 +6,17 @@ try
     fclose(instrfind);
 end
 
+addpath('../OrbitConverter');
+
 NB = CNavisBinr();
 NB.setMode(NB.Mode_Device);
 NB.openDevice('/dev/ttyUSB1', 38400);
 NB.request_88h_bymeansof_27h(1);
+pause(0.5);
 NB.request_87h_bymeansof_39h(1);
+pause(0.5);
 NB.sendPacket('B2', [dec2hex(bin2dec('00001000'), 2) dec2hex(bin2dec('00000000'), 2)]); % ECEF
+pause(0.5);
 
 SNR_GPS = NB.SNR_GPS;
 SNR_GPS_old = NB.SNR_GPS;
@@ -29,9 +34,12 @@ while 1
             Vx(k) = NB.Vx;
             Vy(k) = NB.Vy;
             Vz(k) = NB.Vz;
-            
+            fprintf('Solution RMS = %f m\n', NB.RMS);
+            RMS(k) = NB.RMS;
+            Solution(k) = NB.Solution;
+            TimeofWeek(k) = NB.TimeOfWeek;
             k = k + 1;
-            figure(1); subplot(2,1,1); plot(Y, X);
+            figure(1); subplot(2,1,1); plot3(X, Y, Z);
         end
         if strcmp(NB.PacketNumber, '87')
             SNR_GPS_oldold = SNR_GPS_old;
