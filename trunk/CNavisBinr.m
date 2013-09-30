@@ -17,6 +17,8 @@ classdef CNavisBinr < handle
         Signal_Gal_E5b = 10;
         
         IOFileName
+        DumpFileName
+        Dumpid
         BaudRate
         IOid
         
@@ -48,7 +50,7 @@ classdef CNavisBinr < handle
     
     methods
         function NB = CNavisBinr()
-            NB;
+            NB.DumpFileName = 'dump.bin';
         end
         
         function setMode(NB, Mode)
@@ -64,6 +66,7 @@ classdef CNavisBinr < handle
             end
             system(sprintf('stty -F %s %d', NB.IOFileName, NB.BaudRate));
             NB.IOid = fopen(NB.IOFileName, 'w+');
+            NB.Dumpid = fopen(NB.DumpFileName, 'w');
         end
         
         function openDump(NB, IOFileName)
@@ -133,6 +136,7 @@ classdef CNavisBinr < handle
                 if A_count == 1
                     NB.Byte = dec2hex(A, 2);
                     ok = 1;
+                    fwrite(NB.Dumpid, A, 'uint8');
                 else
                     NB.Byte = NaN;
                     ok = 0;
@@ -419,6 +423,8 @@ classdef CNavisBinr < handle
          end         
         
          function request_60h_bymeansof_21h(NB, Period)
+            NB.sendPacket('21', dec2hex(Period, 2));
+            pause(0.25);
             NB.sendPacket('21', dec2hex(Period, 2));
          end
          
