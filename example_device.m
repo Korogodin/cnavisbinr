@@ -10,7 +10,7 @@ addpath('../OrbitConverter');
 
 NB = CNavisBinr();
 NB.setMode(NB.Mode_Device);
-NB.openDevice('/dev/ttyUSB1', 38400);
+NB.openDevice('/dev/ttyUSB3', 38400);
 NB.request_88h_bymeansof_27h(1);
 pause(0.5);
 NB.request_87h_bymeansof_39h(1);
