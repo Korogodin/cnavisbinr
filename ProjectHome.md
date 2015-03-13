@@ -1,0 +1,1 @@
+NAVIS binary protocol parser class
